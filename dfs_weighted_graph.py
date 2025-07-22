@@ -31,6 +31,13 @@ class Graph:
       self.adjacency[node_a].append((node_b, weight))
       self.adjacency[node_b].append((node_a, weight))
 
+   def internal_dfs(self, evaluated_node, visited):
+      visited.append(evaluated_node)
+
+      for neighbor_node, weight in self.adjacency[evaluated_node]:
+         if neighbor_node not in visited:
+            self.internal_dfs(neighbor_node, visited)
+
    def dijkstra_path_find(self, node_a, node_b):
       predecessors = {}
       distance_set = {}
@@ -70,28 +77,20 @@ class Graph:
       return path
 
    def dfs(self, initial_node):
-      discovered = []
-      stack = []
-      stack.append(initial_node)
-
-      while stack:
-         evaluated_node = stack.pop(0)
-         if evaluated_node not in discovered:
-            discovered.append(evaluated_node)
-            for neighbor_node, weight in self.adjacency[evaluated_node]:
-               stack.append(neighbor_node)
-
-      return discovered
+      visited = []
+      self.internal_dfs(initial_node, visited)
+      return visited
 
 graph = Graph()
 node1 = graph.add_node(1)
 node2 = graph.add_node(2)
 node3 = graph.add_node(3)
 node4 = graph.add_node(4)
+node5 = graph.add_node(5)
 
 graph.add_edge(node1, node3, 29)
 graph.add_edge(node3, node4, 50)
-graph.add_edge(node3, node2, 2)
-graph.add_edge(node2, node4, 20)
+graph.add_edge(node3, node5, 2)
+graph.add_edge(node4, node2, 20)
 
 print(graph.dfs(node1))
